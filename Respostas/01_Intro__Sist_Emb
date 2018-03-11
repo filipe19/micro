@@ -1,0 +1,44 @@
+1. O que são sistemas embarcados?
+
+	Sistemas embarcados, ou embutidos, são sistemas microprocessados onde o computador é dedicado ao dispositivo que ele controla. 
+Eles podem realizar tarefas específicas predefinidas e com requisitos específicos, sendo possível otimizar o projeto reduzindo 
+recursos computacionais, custo e tamanho do produto.
+
+2. O que são sistemas microprocesssados?
+
+	São sistemas que possuem circuitos integrados responsáveis pelo processamento de dados, como uma unidade lógica e aritmética, 
+com diversos registradores especiais, e que precisam de outros componentes externos e receber comandos para funcionar.
+
+3. Apresente aplicações de sistemas embarcados: 
+	(a) para a indústria automotiva: Em computadores de bordo automotivos, equipamento de geolocalização (GPS), sistemas anti-bloqueio 
+dos Freios (ABS), acionadores de airbags, controlador de injeção eletrônica de combustíveis para motores à explosão, alarmes 
+programáveis, etc.
+
+	(b) para eletrodomésticos: Em controladores eletrônicos de eletrodomésticos, como fornos micro-ondas, máquinas de lavar, refrigeradores 
+e aparelhos de ar condicionado modernos, receptores de TV por satélite e de TV por cabo coaxial, monitores de computador e televisores 
+com telas de LCD,  e etc.
+
+	(c) para automação industrial: Em robôs industriais e veículos não tripulados, controle de movimento customizado, equipamentos portáteis 
+de medição e monitoramento de condição em tempo real. 
+
+
+4. Cite arquiteturas possíveis e as diferenças entre elas.
+	Os microcontroladores com arquitetura Havard eram conhecidos como microcontroladores RISC (Computador com Conjunto Reduzido de 
+Instruções), e os microcontroladores com uma arquitetura Von-Neumann, como microcontroladores CISC (Computador com um Conjunto Complexo 
+de Instruções), porém, atualmente as linhas CISC e RISC não possuem muita diferença devido à minimização do tempo de execução e  aos 
+processadores que possuem instruções complexas.
+	A arquitetura de Harvard é caracterizada por ser uma arquitetura mais complexa, se distingue das outras por possuir duas memórias 
+independentes com barramentos de dados, onde estão as instruções de programa e das memórias de dados, permitindo que um processador 
+acesse as duas simultaneamente, obtendo um melhor desempenho em relação a Arquitetura de Von-Neumann, pois pode buscar uma nova 
+instrução enquanto executa outra. Exemplos: Microchip PIC – 35 instruções e Intel 8086, 8088, ARM.
+	A arquitetura Von-Neumann é uma arquitetura mais simples, processa uma única informação por vez, visto que nessa tecnologia, execução 
+e dados percorrem o mesmo barramento, tornando o processo lento em relação à arquitetura Harvard. Exemplos: 4004 – 11 instruções, 
+8080 – 78 instruções, 8051 – 111 instruções, 8085 – 150 instruções e Z80 – mais de 500 instruções.
+
+5. Por que usamos o MSP430 na disciplina, ao invés de outro microcontrolador?
+
+	Encontrado por um preço acessível, o MSP430 possui uma Arquitetura Von Neumann, RISC de 16 bits voltada para linguagens de alto nível,
+seus registradores de 16 bits podem ser usados para variáveis locais, parâmetros para sub-rotinas, endereços e etc, permite aritmética 
+diretamente com valores da memória e é famoso pelo seu baixo consumo. Além disso, não existem limites para as aplicações em 
+instrumentação e controle do microprocessador da Texas Instruments MSP430, visto que existem diversas plataformas de desenvolvimento 
+para trabalhar com este microcontrolador. 
