@@ -1,0 +1,61 @@
+1. Quais as diferenças entre os barramentos de dados e de endereços?
+  
+  O barramento de dados transmite dados em paralelo e de forma bi-direcional, ou seja, em ambas as direções. 
+Enquanto o barramento de endereço é unidirecional e usado para selecionar a origem ou destino de dados transmitidos
+em uma linha. 
+
+2. Quais são as diferenças entre as memórias RAM e ROM?
+
+  A memória RAM é aquela que permite a gravação e a regravação dos dados, no entanto, se o computador for desligado, 
+por exemplo, perde as informações registradas (memória volátil). Já a memória ROM permite a gravação de dados 
+uma única vez, não sendo possível apagar ou editar nenhuma informação, somente acessar a mesma. 
+
+3. Considere o código abaixo:
+
+#include <stdio.h>
+int main(void)
+{
+	int i;
+	printf("Insira um número inteiro: ");
+	scanf("%d", &i);
+	if(i%2)
+		printf("%d eh impar.\n");
+	else
+		printf("%d eh par.\n");
+	return 0;
+}
+
+Para este código, responda: 
+
+  (a) A variável i é armazenada na memória RAM ou ROM? Por quê? 
+
+  A variável i é armazenada na memória RAM, pois o tempo de acesso é menor,assim, acontece uma compilação
+mais rápida no programa, em linguagem C.
+
+  (b) O programa compilado a partir deste código é armazenado na memória RAM ou ROM? Por quê?
+  
+  É armazenado em memória ROM, pois, os dados não são apagados, existindo a possibilidade de rodar o programa 
+posteriormente.  
+
+4. Quais são as diferenças, vantagens e desvantagens das arquiteturas Harvard e Von Neumann?
+
+  A arquitetura de Harvard é caracterizada por ser uma arquitetura mais complexa, se distingue das outras por possuir 
+duas memórias independentes com barramentos de dados, onde estão as instruções de programa e das memórias de dados, 
+permitindo que um processador acesse as duas simultaneamente, obtendo um melhor desempenho em relação a 
+Arquitetura de Von-Neumann, pois pode buscar uma nova instrução enquanto executa outra. Exemplos: 
+Microchip PIC – 35 instruções e Intel 8086, 8088, ARM.
+  A arquitetura Von-Neumann é uma arquitetura mais simples, processa uma única informação por vez, visto que nessa 
+tecnologia, execução e dados percorrem o mesmo barramento, tornando o processo lento em relação à arquitetura Harvard.
+Exemplos: 4004 – 11 instruções, 8080 – 78 instruções, 8051 – 111 instruções, 8085 – 150 instruções 
+e Z80 – mais de 500 instruções.
+
+5. Considere a variável inteira i, armazenando o valor 0x8051ABCD. Se i é armazenada na memória a partir do endereço 0x0200, 
+como ficam este byte e os seguintes, considerando que a memória é: 
+
+  (a) Little-endian: 0xCDAB5180
+
+  (b) Big-endian: 0x8051ABCD
+
+6. Sabendo que o processador do MSP430 tem registradores de 16 bits, como ele soma duas variáveis de 32 bits?
+  É possível somar duas variáveis de 32 bits utilizando 4 registradores, sendo 2 para comportar cada variável 
+ que seriam divididas.
