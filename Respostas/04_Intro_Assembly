@@ -1,0 +1,83 @@
+Para todas as questões, considere que as variáveis f, g, h, i e j são do tipo 
+inteiro (16 bits na arquitetura do MSP430), e que o vetor A[] é do tipo inteiro. 
+Estas variáveis estão armazenadas nos seguintes registradores:
+f: R4
+g: R5
+h: R6
+i: R7
+j: R8
+A: R9
+
+Utilize os registradores R11, R12, R13, R14 e R15 para armazenar valores temporários.
+1. Traduza as seguintes linhas em C para a linguagem assembly do MSP430. 
+Utilize somente as seguintes instruções: mov.w, add.w e sub.w.
+(a) f = 0;
+mov.w #0, R4
+
+(b) g++;
+mov.w #1, R11
+add.w R11, R5
+
+(c) h--;
+mov.w #1, R11
+sub.w R11, R6
+
+(d) i += 2;
+ov.w #2, R11
+add.w R11, R7
+
+(e) j -= 2;
+mov.w #2, R11
+sub.w R11, R8
+
+2. Traduza as seguintes linhas em C para a linguagem assembly do MSP430. Utilize somente as seguintes instruções: mov.w, add.w, sub.w, clr.w, dec.w, decd.w, inc.w e incd.w.
+
+(a) f = 0; 
+clr.w R4
+
+(b) g++; 
+inc.w R5
+
+(c) h--; 
+dec.w R6
+
+(d) i += 2; 
+ind.w R7
+
+(e) j -= 2; 
+decd R8
+
+3. Traduza as seguintes linhas em C para a linguagem assembly do MSP430. 
+Utilize somente as seguintes instruções: mov.w, add.w, sub.w, clr.w, dec.w, decd.w, inc.w e incd.w.
+(a) f *= 2;
+add.w R4, R4 ; f = f + f = 2f
+
+(b) g *= 3;
+add.w R5, R5 ; g = g + g = 2g
+add.w R5, R5   ; g = g + g + g = 3g
+
+(c) h *= 4;
+add.w R6, R6 ; h = h + h = 2h
+add.w R6, R6; h = h + h + h = 3h
+add.w R6, R6  ; h = h + h + h + h = 4h
+
+(d) A[2] = A[1] + A[0];
+mov.w 2(R9), R15 ; R15 = R10 <=> temp = A[1]
+add.w R9, R15 ; R15 = R15 + R9 <=> temp += A[0]
+mov.w R15, 4(R9) ; R11 = R15 <=> A[2] =temp = A[1] + A[0]
+
+(e) A[3] = 2*f - 4*h;
+add.w R4, R4; R4 = f + f = 2f !
+mov.w R4, R14 ; R14 = 2f
+add.w R6, R6  ; h = h + h = 2h
+add.w R6, R6    ; h = h + h + h = 3h
+add.w R6, R6   ; h = h + h + h + h = 4h !
+sub.w R6, R14      ; R14 = (R14 = 2f) sub (R6 = 4h)
+mov.w R14, 6(R9) ; R12 = A[3] = R14 = 2f - 4h
+
+(f) A[3] = 2*(f - 2h);
+add.w R6, R6 ; h = h + h = 2h
+mov.w R4, R14 ; R14 = f
+sub.w R6, R14 ; R14 = f - 2h
+add.w R14, R14 ; R14 = R14 + R14 = 2 R14
+mov.w R14, 6(R9) ; R12 = A[3] = R14 = 2(f - 2h)   
