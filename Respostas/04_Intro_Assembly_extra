@@ -1,0 +1,65 @@
+Para todas as questões, considere que as variáveis f, g, h, i e j são do tipo inteiro (16 bits na arquitetura do MSP430),
+e que o vetor A[] é do tipo inteiro. Estas variáveis estão armazenadas nos seguintes registradores:
+
+f: R4
+g: R5
+h: R6
+i: R7
+j: R8
+A: R9
+Utilize os registradores R11, R12, R13, R14 e R15 para armazenar valores temporários.
+
+Traduza as seguintes linhas em C para a linguagem assembly do MSP430. Utilize somente as seguintes instruções: 
+mov.w, add.w, sub.w, clr.w, dec.w, decd.w, inc.w e incd.w.
+
+(a) f *= 5;
+  mov.w R4, R12 ; f
+  add.w R12, R4; 2*f
+  add.w R12, R4; 2*f + f
+  add.w R12, R4; 3*f +f
+  add.w R12, R4; 4*f + f
+
+(b) g *= 6;
+  mov.w R5, R11; g 
+  add.w R11, R5; g+ g
+  add.w R11, R5; 2*g + g
+  add.w R11, R5; 3*g +g
+  add.w R11, R5; 4*g +g  
+  add.w R11, R5; 5*g +g
+  
+(d) A[2] = 6*A[1] + 5*A[0];
+  mov.w 2(R9), R13; R13 = R10 => temp = A[1]
+  add.w R13, R13; R13 = 2*A[1]
+  add.w R13, R13; R13 = 3*A[1]
+  add.w R13, R13; R13 = 4*A[1]
+  add.w R13, R13; R13 = 5*A[1]
+  add.w R13, R13; R13 = 6*A[1]
+  add.w R9, R9; R9 = 2*A[0]
+  add.w R9, R9; R9 = 3*A[0]
+  add.w R9, R9; R9 = 4*A[0]
+  add.w R9, R9; R9 = 5*A[0]
+  add.w R9, R13; R13 = R13 + R9 <=> R13 = 6*A[1] +5*A[0]
+  mov.w R13, 4(R9); R11 = R13 <=> A[2] = R13 = 6*A[1] + 5* A[0]
+        
+(e) A[3] = 3*f - 5*h;
+   add.w R4, R4; R4 = 2*f
+   add.w R4, R4; R4 = 3*f
+   mov.w R4, R14; R14 = 3f
+   add.w R6, R6; h = 2*h
+   add.w R6, R6; h = 3*h
+   add.w R6, R6; h = 4*h
+   add.w R6, R6; h = 5*h
+   sub.w R6, R14; R14 = (R14= 3*f) - (R6 =5*h)
+   mov.w R14, 6(R9); R12 = A[3] = R14 = 3f-5h
+
+(f) A[5] = 6*(f - 2*h);
+  mov.w R6,R11; h
+  add.w R11, R6; 2*h
+  sub.w R4, R6; (f-2*h)
+  add.w R6, R12; (f-2*h)
+  add.w R12, R6; 2*(f-2*h)
+  add.w R12, R6; 3*(f-2*h)
+  add.w R12, R6; 4*(f-2*h)
+  add.w R12, R6; 5*(f-2*h)
+  add.w R12, R6; 6*(f-2*h)
+  mov.w R6, 10(R9); A[5] =6*(f-2*h)
