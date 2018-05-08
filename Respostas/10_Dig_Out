@@ -1,0 +1,288 @@
+1. Projete o hardware necessário para o MSP430 controlar um motor DC de 12V e 4A. Utilize transistores bipolares de junção (TBJ) 
+com Vbe = 0,7 V, beta = 100 e Vce(saturação) = 0,2 V. Além disso, considere que Vcc = 3 V para o MSP430, e que este não pode fornecer 
+mais do que 10 mA por porta digital.
+
+Suponha que o transistor suporte a corrente de coletor dada pela carga, que é o motor DC. 
+A corrente de coletor necessária = 4 A. Logo a corrente de base será:
+
+Ib = Ic / 100 = 4 / 100 = 40 mA.
+
+Como a corrente de base ultrapassa a corrente que a porta digital pode fornecer, então deve-se utilizar dois transistores,
+na forma do par Darlington. Então a corrente de base será:
+
+Ib = Ic / ß2 = 4 /10000 = 0,4 mA
+
+O resistor Rb = (Vcc – 2*Vbe)/Ib = (3 – 2*0,7)/0,4*10^(-3) = 4 Kohm
+
+2. Projete o hardware necessário para o MSP430 controlar um motor DC de 10V e 1A. Utilize transistores bipolares de junção (TBJ) 
+com Vbe = 0,7 V e beta = 120. Além disso, considere que Vcc = 3,5 V para o MSP430, e que este não pode fornecer mais do que 10 mA
+por porta digital.
+
+A corrente de coletor Ic é 1A, Logo a corrente de base será:
+
+Ib = Ic/ß = 1/120 = 8,33 mA.
+
+Rb = (Vcc-Vbe)/Ib
+= (Vcc-Vbe)*ß/Ic = ((3,5 - 0,7)*120)/1 = 336 ohm
+
+3. Projete o hardware utilizado para controlar 6 LEDs utilizando charlieplexing. Apresente os pinos utilizados no MSP430 e os LEDs,
+nomeados L1-L6.
+Utilizaremos 3 pinos: P1.1,P1.2,P1.4;
+P1DIR &= ~ P1.1  , P1.2=1 , P1.4=0 , -> LED 1 (L1) //P1.1 ESTÁ COMO ENTRADA DIGITAL
+P1DIR &= ~ P1.1 , P1.2=0 , P1.4=1 , -> LED 2 (L2)  //P1.1 ESTÁ COMO ENTRADA DIGITAL
+P1.1=1 , P1.2=0 ,P1DIR &= ~ P1.4 , -> LED 3 (L3)   //P1.4 ESTÁ COMO ENTRADA DIGITAL
+P1.1=0 , P1.2=1 ,P1DIR &= ~ P1.4 , -> LED 4 (L4)   //P1.4 ESTÁ COMO ENTRADA DIGITAL
+P1.1=1 ,P1DIR &= ~ P1.2 , P1.4=0 , -> LED 5 (L5)   //P1.2 ESTÁ COMO ENTRADA DIGITAL
+P1.1=0 ,P1DIR &= ~ P1.2 , P1.4=1 , -> LED 6 (L6)   //P1.2 ESTÁ COMO ENTRADA DIGITAL
+
+4. Defina a função void main(void){} para controlar 6 LEDs de uma árvore de natal usando o hardware da questão anterior. Acenda os
+LEDs de forma que um ser humano veja todos acesos ao mesmo tempo.
+
+#include<msp430g2553.h>
+int main(void)
+
+WDTCTL = WDTPW|WDTHOLD;
+while(1)
+{       //LED 1
+	P1DIR &= ~ BIT1; //Entrada digital
+	P1DIR|= (BIT2+ ~BIT4); //combinações de saida digitais
+	P1REN|= (BIT2+ ~BIT4);
+	P1OUT|= (BIT2+ ~BIT4);
+	//LED2
+	P1DIR &= ~ BIT1; //Entrada digital
+	P1DIR|= (BIT4+ ~BIT2); //combinações de saida digitais
+	P1REN|= (BIT4+ ~BIT2);
+	P1OUT|= (BIT4+ ~BIT2);
+	//LED 3
+	P1DIR &= ~ BIT4; //Entrada digital
+	P1DIR|= (BIT1+ ~BIT2); //combinações de saida digitais
+	P1REN|= (BIT1+ ~BIT2);
+	P1OUT|= (BIT1+ ~BIT2);
+	//LED4
+	P1DIR &= ~ BIT4; //Entrada digital
+	P1DIR|= (BIT2+ ~BIT1); //combinações de saida digitais
+	P1REN|= (BIT2+ ~BIT1);
+	P1OUT|= (BIT2+ ~BIT1);
+	//LED5
+	P1DIR &= ~ BIT2; //Entrada digital
+	P1DIR|= (BIT1+ ~BIT4); //combinações de saida digitais
+	P1REN|= (BIT1+ ~BIT4);
+	P1OUT|= (BIT1+ ~BIT4);
+	//LED6
+	P1DIR &= ~ BIT2; //Entrada digital
+	P1DIR|= (BIT4+ ~BIT1); //combinações de saida digitais
+	P1REN|= (BIT4+ ~BIT1);
+	P1OUT|= (BIT4+ ~BIT1);      
+	
+	
+}
+
+5. Defina a função void main(void){} para controlar 6 LEDs de uma árvore de natal usando o hardware da questão 3. Acenda os LEDs de
+forma que um ser humano veja os LEDs L1 e L2 acesos juntos por um tempo, depois os LEDs L3 e L4 juntos, e depois os LEDs L5 e L6 juntos.
+#include<msp430g2553.h>
+
+#define LED_DLY 5000      // VaLOR PARA SER DECREMENTADO
+
+void delay( volatile unsigned long int t)
+{
+	while(t--);
+}
+
+int main(void){
+
+WDTCTL = WDTPW | WDTHOLD; //Parar o whatdog timer
+
+while(1)
+{       //LED 1
+	P1DIR &= ~ BIT1; //Entrada digital
+	P1DIR|= (BIT2+ ~BIT4); //combinações de saida digitais
+	P1REN|= (BIT2+ ~BIT4);
+	P1OUT|= (BIT2+ ~BIT4);
+	//LED2
+	P1DIR &= ~ BIT1; //Entrada digital
+	P1DIR|= (BIT4+ ~BIT2); //combinações de saida digitais
+	P1REN|= (BIT4+ ~BIT2);
+	P1OUT|= (BIT4+ ~BIT2);
+        delay(1);
+	//LED 3
+	P1DIR &= ~ BIT4; //Entrada digital
+	P1DIR|= (BIT1+ ~BIT2); //combinações de saida digitais
+	P1REN|= (BIT1+ ~BIT2);
+	P1OUT|= (BIT1+ ~BIT2);
+	//LED4
+	P1DIR &= ~ BIT4; //Entrada digital
+	P1DIR|= (BIT2+ ~BIT1); //combinações de saida digitais
+	P1REN|= (BIT2+ ~BIT1);
+	P1OUT|= (BIT2+ ~BIT1);
+        delay(1);
+	//LED5
+	P1DIR &= ~ BIT2; //Entrada digital
+	P1DIR|= (BIT1+ ~BIT4); //combinações de saida digitais
+	P1REN|= (BIT1+ ~BIT4);
+	P1OUT|= (BIT1+ ~BIT4);
+	//LED6
+	P1DIR &= ~ BIT2; //Entrada digital
+	P1DIR|= (BIT4+ ~BIT1); //combinações de saida digitais
+	P1REN|= (BIT4+ ~BIT1);
+	P1OUT|= (BIT4+ ~BIT1); 
+        delay(1);
+	
+	
+}
+}
+6. Defina a função `void EscreveDigito(volatile char dig);` que escreve um dos dígitos 0x0-0xF em um único display de 7 segmentos 
+via porta P1, baseado na figura abaixo. Considere que em outra parte do código os pinos P1.0-P1.6 já foram configurados para 
+corresponderem aos LEDs A-G, e que estes LEDs possuem resistores externos para limitar a corrente.
+
+
+              ---  ==> A= BIT0
+             |   |
+ BIT5= F <== |   | ==> B= BIT1
+             |   |
+              ---  ==> G= BIT6
+             |   |
+ BIT4= E <== |   | ==> C= BIT2
+             |   |
+              ---  ==> D= BIT3
+	
+#include <msp4302553.h>
+
+void escrevadigito(volatile char dig){
+P1DIR=0xff;
+if(dig == '0'){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5;
+}
+if(dig == '1'){
+P1OUT= BIT1+BIT2;
+}
+if(dig == '2'){
+P1OUT= BIT0+BIT1+BIT3+BIT4+BIT6;
+}
+if(dig == '3'){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT6;
+}
+if(dig == '4'){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5;
+}
+if(dig == '5'){
+P1OUT= BIT1+BIT2+BIT5+BIT6;
+}
+if(dig == '6'){
+P1OUT= BIT0+BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == '7'){
+P1OUT= BIT0+BIT1+BIT2;
+}
+if(dig == '8'){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == '9'){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT5+BIT6;
+}
+if(dig == 'A'){
+P1OUT= BIT0+BIT1+BIT2+BIT4+BIT5+BIT6;
+}
+if(dig == 'B'){
+P1OUT= BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == 'C'){
+P1OUT= BIT0+BIT3+BIT4+BIT5;
+}
+if(dig == 'D'){
+P1OUT= BIT1+BIT2+BIT3+BIT4+BIT6;
+}
+if(dig == 'E'){
+P1OUT= BIT0+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == 'F'){
+P1OUT= BIT0+BIT4+BIT5+BIT6;
+}
+
+
+}
+
+7. Multiplexe 2 displays de 7 segmentos para apresentar a seguinte sequência em loop:
+	00 - 11 - 22 - 33 - 44 - 55 - 66 - 77 - 88 - 99 - AA - BB - CC - DD - EE - FF
+	
+OBS: CONSIDERANDO QUE A LIGAÇÃO DOS HARDWARE(2 DISPLAYS) SERÃO NO MESMO NÓ OU SEJA, A LÓGICA SERA FEITA PARA UM DISPLAY QUE AO MANIPULAR O
+HARDWARE SERÁ UTILIZADA POR 2 DISPLAYS EM AFETAR A FUNCIONALIDADE.
+
+#include<msp430g2553.h>
+
+#define LED_DLY 5000      // VaLOR PARA SER DECREMENTADO
+
+volatile unsigned long int i;
+
+void delay( volatile unsigned long int t)
+{
+	while(t--);
+}
+
+void escrevadigito(volatile unsigned long int dig){
+P1DIR=0xff;
+if(dig == 0){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5;
+}
+if(dig == 1){
+P1OUT= BIT1+BIT2;
+}
+if(dig == 2){
+P1OUT= BIT0+BIT1+BIT3+BIT4+BIT6;
+}
+if(dig == 3){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT6;
+}
+if(dig == 4){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5;
+}
+if(dig == 5){
+P1OUT= BIT1+BIT2+BIT5+BIT6;
+}
+if(dig == 6){
+P1OUT= BIT0+BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == 7){
+P1OUT= BIT0+BIT1+BIT2;
+}
+if(dig == 8){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig == 9){
+P1OUT= BIT0+BIT1+BIT2+BIT3+BIT5+BIT6;
+}
+if(dig ==11){
+P1OUT= BIT0+BIT1+BIT2+BIT4+BIT5+BIT6;
+}
+if(dig ==11){
+P1OUT= BIT2+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig ==12){
+P1OUT= BIT0+BIT3+BIT4+BIT5;
+}
+if(dig ==13){
+P1OUT= BIT1+BIT2+BIT3+BIT4+BIT6;
+}
+if(dig ==14){
+P1OUT= BIT0+BIT3+BIT4+BIT5+BIT6;
+}
+if(dig ==15){
+P1OUT= BIT0+BIT4+BIT5+BIT6;
+}
+
+
+}
+
+int main(void){
+
+WDTCTL = WDTPW | WDTHOLD; //Parar o whatdog timer
+
+while(1)
+{ 
+	for(i=15;i>0; i--){
+	 escrevadigito(i);
+	 delay(LED_DLY);
+	}
+
+}
+
+}
