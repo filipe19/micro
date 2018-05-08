@@ -1,0 +1,222 @@
+1-Escreva uma função em C que faz o debounce de botões ligados à porta P1.
+
+#include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT2         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 5000      // VaLOR PARA SER DECREMENTADO
+
+void delay( volatile unsigned long int t)
+{
+	while(t--);
+}
+
+int Debounce(int porta_1)
+{
+if(porta_1 = 1)
+ {
+     delay(100);		// Houve mudança - aguarda um tempo suficiente para pegar o valor
+     if(porta_1 = 1)
+       {
+          return P1IN & porta_1; // esperou tempo suficiente
+        }
+    else if(porta_1 = 0)
+        {
+          return P1IN &~ porta_1;// nao esperou tempo suficiente
+         }
+  {
+
+
+
+2-Escreva um código em C que lê 9 botões multiplexados por 6 pinos, e pisca os LEDs da placa Launchpad de acordo com os botões.
+Por exemplo, se o primeiro botão é pressionado, os LEDs piscam uma vez; se o segundo botão é pressionado, os LEDs piscam duas vezes;
+e assim por diante. Se mais de um botão é pressionado, os LEDs não piscam.
+
+ #include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+
+
+
+#define LED_DLY 100000      // VaLOR PARA SER DECREMENTADO, APROXIMADAMENTE 1 SEGUNDO
+
+#define DUAS_X_LED_DLY 50000   // VALOR PARA DECREMENTA, APROXIMADAMENTE 2 SEGUNDOS
+ #define OUT_DIG_X (BIT1+BIT2+BIT3) // SÃO AS SAÍDAS DA MULTIPLEXAÇÃO 
+ #define IN_DIG_Y  (BIT4+BIT5+BIT7) // SÃO AS ENTRADAS DA MULTIPLEXAÇÃO
+ #define LED1 BIT0        // LED=0000 0001
+
+#define LED2 BIT6         // LED2= 0010 0000
+ 
+volatile unsigned int i, botao, linha;
+
+
+void delay( volatile unsigned long int t)
+{
+	
+      while(t--);
+
+ }
+
+
+
+ void led_acende (){
+  
+      while(1)
+  {
+    
+        P1OUT|= LED1+ LED2;
+    
+        break;    
+    
+      }  
+  
+ }
+
+
+
+ void led_apaga(){
+  
+   while(1)
+  {
+    
+     P1OUT&=~(LED1+LED2);
+    
+     break;
+    
+     }
+ }
+   void pisca(volatile unsigned int botao)
+{
+    
+     while(1)
+  {
+
+       for(i=botao; i>0; i--){
+           led_acende ();
+           //delay(1);
+      
+           delay(LED_DLY);
+       
+           led_apaga();
+       
+           delay(LED_DLY);
+           //delay(1);
+       }    
+    
+     break;
+    
+     }   
+   }
+    volatile unsigned int verificar_saidas(void){
+    
+    P1DIR &= ~ (IN_DIG_Y); // configurando y como entradas
+    P1OUT = 0X00;         // zerando as saidas
+    P1REN |= (OUT_DIG_X); // configurando x como saida
+    P1DIR |= (IN_DIG_Y); //Tornando-os pull-up ou pull-down
+    P1OUT |= (IN_DIG_Y); // tornando pull-up
+    
+    if(((P1IN&BIT4)==0)&&(((P1IN&BIT5)==BIT5))&&(((P1IN&BIT7)==BIT7))){
+      linha=1;
+      botao=verificar_entradas(linha);
+      return botao;
+    }
+    else if(((P1IN&BIT4)==BIT4)&&(((P1IN&BIT5)==0))&&(((P1IN&BIT7)==BIT7))){
+      linha=2;
+      botao=verificar_entradas(linha);
+      return botao;
+    }
+    else if(((P1IN&BIT4)==BIT4)&&(((P1IN&BIT5)==BIT5))&&(((P1IN&BIT7)==0))){
+      linha=3;
+       botao=verificar_entradas(linha);
+      return botao;
+    }
+    else
+      return 0;
+    
+    }
+   int verificar_entradas(volatile unsigned long int linha){
+   P1DIR &= ~ (OUT_DIG_X); // configurando y como entradas
+   P1OUT = 0X00;         // zerando as saidas
+   P1REN |= (IN_DIG_Y); // configurando x como saida
+   P1DIR |= (OUT_DIG_X); //Tornando-os pull-up ou pull-down
+   P1OUT |= (OUT_DIG_X); // tornando pull-up
+  
+   if(linha==1){
+   if(((P1IN&BIT1)==0)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==BIT3))){
+      return 1;
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==0))&&(((P1IN&BIT3)==BIT3))){
+      return 2;
+      
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==0))){
+      return 3;
+    }
+    else
+      botao=0;
+    
+    }
+  else if(linha==2){
+  if(((P1IN&BIT1)==0)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==BIT3))){
+    return 4;
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==0))&&(((P1IN&BIT3)==BIT3))){
+      return 5;
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==0))){
+      return 6;
+    }
+    else
+      return 0;
+    
+    }
+  else if (linha==3){
+  if(((P1IN&BIT1)==0)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==BIT3))){
+    return 7;
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==0))&&(((P1IN&BIT3)==BIT3))){
+      return 8;
+    }
+    else if(((P1IN&BIT1)==BIT1)&&(((P1IN&BIT2)==BIT2))&&(((P1IN&BIT3)==0))){
+      return 9;
+    }
+    else
+      return 0;
+    
+  }
+  else
+    return 0;
+
+
+}
+ 
+   
+
+int main( void )
+{
+ 
+
+  // Stop watchdog timer to prevent time out reset
+ 
+   WDTCTL = WDTPW + WDTHOLD;
+  
+   P1OUT = 0x00;
+  
+   P1DIR |= LED1 + LED2;
+   //P1REN |= BTN;                 // Habilitando o resistor de pull-up ou pull-down[Depende da saída]
+
+   //P1OUT = BTN;               //Habilitando o botão, será pull-up
+
+  
+  
+      
+   for(;;)
+    {
+
+     botao=verificar_saidas();
+     pisca(botao);
+     botao=0;
+     
+    
+   }
+  
+
+ }  
