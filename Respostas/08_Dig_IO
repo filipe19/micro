@@ -1,0 +1,220 @@
+Para todas as questões, utilize os LEDs e/ou os botões da placa Launchpad do MSP430.
+
+1-Escreva um código em C que pisca os LEDs ininterruptamente.
+
+#include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT2         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 5000      // VaLOR PARA SER DECREMENTADO
+
+
+
+void delay( volatile unsigned long int t)
+{
+	while(t--);
+}
+
+void led_acende (){
+  while(1)
+  {
+    P1OUT|= LED1+ LED2;
+    break;    
+    }  
+  }
+
+void led_apaga(){
+  while(1)
+  {
+    P1OUT&=~(LED1+LED2);
+    break;
+    }  
+  }
+
+void main(void){
+WDTCTL = WDTPW | WDTHOLD; //Parar o whatdog timer
+P1OUT = 0x00;                 // Desligar os Leds no inicio
+P1DIR = LED1 + LED2;       // Deixar disponiveis os valores
+for(;;)
+{
+led_apaga();
+delay(LED_DLY);
+led_acende();
+delay(LED_DLY);
+}
+}
+
+
+2-Escreva um código em C que pisca os LEDs ininterruptamente. No ciclo que pisca os LEDs, o tempo que os LEDs ficam ligados deve 
+ser duas vezes maior do que o tempo que eles ficam desligados
+#include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT2         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 100000      // VaLOR PARA SER DECREMENTADO, APROXIMADAMENTE 1 SEGUNDO
+#define DUAS_X_LED_DLY 50000   // VALOR PARA DECREMENTA, APROXIMADAMENTE 2 SEGUNDOS
+ 
+void main(void){
+WDTCTL = WDTPW | WDTHOLD; //Parar o whatdog timer
+P1OUT = 0x00;                 // Desligar os Leds no inicio
+P1DIR = LED1 + LED2;       // Deixar disponiveis os valores
+for(;;)
+{
+led_apaga();
+delay(DUAS_X_LED_DLY);
+led_acende();
+delay(LED_DLY);
+}
+}
+
+
+3-Escreva um código em C que acende os LEDs quando o botão é pressionado.
+ #include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT3         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 100000      // VaLOR PARA SER DECREMENTADO, APROXIMADAMENTE 1 SEGUNDO
+#define DUAS_X_LED_DLY 50000   // VALOR PARA DECREMENTA, APROXIMADAMENTE 2 SEGUNDOS
+
+
+int main( void )
+{
+  volatile unsigned int i;
+  // Stop watchdog timer to prevent time out reset
+  WDTCTL = WDTPW + WDTHOLD;
+  P1OUT = 0x00;
+  P1REN |= BTN;                 // Habilitando o resistor de pull-up ou pull-down[Depende da saída]
+  P1DIR |= LED1 + LED2;
+  P1OUT = BTN;               //Habilitando o botão, será pull-up
+    for(;;)
+    {
+      if((P1IN & BTN) == 0)
+      {
+       led_acende ();
+      }
+      else
+      {
+       led_apaga();
+      }
+     
+    }
+  
+}      
+
+4-Escreva um código em C que pisca os LEDs ininterruptamente somente se o botão for pressionado.
+ #include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT3         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 100000      // VaLOR PARA SER DECREMENTADO, APROXIMADAMENTE 1 SEGUNDO
+#define DUAS_X_LED_DLY 50000   // VALOR PARA DECREMENTA, APROXIMADAMENTE 2 SEGUNDOS
+void delay( volatile unsigned long int t)
+{
+	while(t--);
+}
+
+void led_acende (){
+  while(1)
+  {
+    P1OUT|= LED1+ LED2;
+    break;    
+    }  
+  }
+
+void led_apaga(){
+  while(1)
+  {
+    P1OUT&=~(LED1+LED2);
+    break;
+    }  
+  }
+
+int main( void )
+{
+  volatile unsigned int i;
+  // Stop watchdog timer to prevent time out reset
+  WDTCTL = WDTPW + WDTHOLD;
+  P1OUT = 0x00;
+  P1REN |= BTN;                 // Habilitando o resistor de pull-up ou pull-down[Depende da saída]
+  P1DIR |= LED1 + LED2;
+  P1OUT = BTN;               //Habilitando o botão, será pull-up
+    for(;;)
+    {
+      if((P1IN & BTN) == 0)
+      {
+        led_acende ();
+       delay(LED_DLY);
+       led_apaga();
+       delay(LED_DLY);
+      }
+      else
+      {
+       led_apaga();
+      }
+     
+    }
+  
+}    
+5-Escreva um código em C que acende os LEDs quando o botão é pressionado. Deixe o MSP430 em modo de baixo consumo, e habilite a
+interrupção do botão.
+
+ #include <msp430g2553.h> // Biblioteca da MSP430 MODELO G2553
+#define BTN BIT3         // btn=0000 00010
+#define LED1 BIT0        // LED=0000 0001
+#define LED2 BIT6         // LED2= 0010 0000
+#define LED_DLY 100000      // VaLOR PARA SER DECREMENTADO, APROXIMADAMENTE 1 SEGUNDO
+#define DUAS_X_LED_DLY 50000   // VALOR PARA DECREMENTA, APROXIMADAMENTE 2 SEGUNDOS
+
+
+
+void delay( volatile unsigned long int t)
+{	
+  while(t--);
+}
+
+
+void led_acende (){ 
+  while(1){   
+    P1OUT|= (LED1+ LED2);    
+    break;    
+  }    
+}
+
+
+void led_apaga(){  
+  while(1){    
+    P1OUT&=~(LED1+LED2);   
+     break;    
+  }    
+}
+
+
+
+
+int main( void )
+{
+  volatile unsigned int i;
+  // Stop watchdog timer to prevent time out reset
+  WDTCTL = WDTPW + WDTHOLD;
+  P1OUT = 0x00;
+  P1REN |= BTN;                 // Habilitando o resistor de pull-up ou pull-down[Depende da saída]
+  P1DIR |= LED1 + LED2;
+  P1OUT = BTN;               //Habilitando o botão, será pull-up
+  P1IES |= BTN;
+  P1IE |= BTN;
+  for(;;)
+    {
+        _BIS_SR(GIE + LPM4_bits);
+    }
+}
+
+#pragma vector = PORT1_VECTOR
+__interrupt void Port_1(void)
+{
+    while((P1IN&BTN)==0)
+    {
+      led_acende ();
+    }
+      led_apaga();
+      P1IFG &= ~BTN;
+}
